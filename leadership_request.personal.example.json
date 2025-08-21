@@ -1,0 +1,10 @@
+{
+  "task_id": "uuid",
+  "cue": "transition at waypoint",
+  "risk_profile": {
+    "timing": "high",
+    "safety": "low"
+  },
+  "lead_role": "controller",
+  "handoff_rule": "handoff when variance<threshold for window or after timebox"
+}

@@ -1,0 +1,6 @@
+{"timestamp": 1755668012.2896352, "agentA": "A335", "agentB": "B335", "score": 0.33620584, "history_sample": [0.49250445, 0.17990723]}
+{"timestamp": 1755735643.2285962, "agentA": "gamma", "agentB": "delta", "score": 0.25, "history_sample": [0.2, 0.3]}
+{"timestamp": 1755748345.7228954, "agentA": "What if contradiction is the seed of reinterpretation?", "agentB": "Echo", "score": 0.0, "history_sample": []}
+{"timestamp": 1755748464.1808422, "agentA": "What if contradiction is the seed of reinterpretation?", "agentB": "Echo", "score": 0.0, "history_sample": []}
+{"timestamp": 1755748793.9320617, "agentA": "What if contradiction is the seed of reinterpretation?", "agentB": "Echo", "score": 0.0, "history_sample": []}
+{"timestamp": 1755748793.942521, "agentA": "?", "agentB": "Echo", "score": 0.0, "history_sample": []}

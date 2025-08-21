@@ -1,0 +1,26 @@
+orchestration:
+  directive_ratio_max: 0.4
+  intervention_rules:
+    stop_if:
+      - "error_variance>threshold for window"
+      - "compound_error>threshold"
+    allow_self_fix_if:
+      - "self_correction_prob>=0.6"
+      - "timebox_remaining>=20s"
+  leadership_arbitration:
+    criteria: ["task_risk", "competence_score", "latency_budget", "stability_index"]
+
+gates:
+  pre_action:
+    veto: ["safety"]
+    quorum:
+      required: 2
+      weights: {truth_anchor: 0.5, commonsense: 0.25, identity: 0.15, resource: 0.10}
+  pre_memory:
+    require_provenance: true
+    max_drift: 0.15
+    re_ground_trigger: 0.2
+
+ethics:
+  escalation_route: "human_review"
+  logging: "immutable, queryable by trace_id"

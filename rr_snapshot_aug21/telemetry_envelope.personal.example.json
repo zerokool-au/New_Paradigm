@@ -1,0 +1,31 @@
+{
+  "trace_id": "uuid",
+  "timestamp": "2025-08-17T01:45:00Z",
+  "origin": "core|agent|sim",
+  "context": {
+    "task_id": "uuid",
+    "domain": "timing_control|navigation|planning",
+    "stage": "pre_action|pre_memory|post_update"
+  },
+  "proposed": {
+    "action": "motor_command|plan|memory_write|tool_call",
+    "content": {
+      "cue": "accelerate",
+      "target": 1.08
+    },
+    "justification": "program-of-thought#hash",
+    "uncertainty": 0.21
+  },
+  "evidence": [
+    {
+      "type": "sim_log",
+      "metric": "control_value",
+      "before": 0.95,
+      "after": 1.02
+    },
+    {
+      "type": "retrieval",
+      "source": "knowledge_base://control/principles"
+    }
+  ]
+}

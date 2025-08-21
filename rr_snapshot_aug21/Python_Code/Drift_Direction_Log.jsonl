@@ -1,0 +1,33 @@
+import json
+import time
+
+def classify_drift_direction(agentA, agentB, score, history_sample):
+    # Simple heuristic: compare current score to history
+    avg_history = sum(history_sample) / len(history_sample)
+    delta = score - avg_history
+
+    if delta > 0.1:
+        direction = "divergent"
+    elif delta < -0.1:
+        direction = "convergent"
+    else:
+        direction = "stable"
+
+    log_entry = {
+        "timestamp": time.time(),
+        "agentA": agentA,
+        "agentB": agentB,
+        "score": score,
+        "avg_history": avg_history,
+        "delta": delta,
+        "direction": direction
+    }
+
+    with open("Drift_Direction_Log.jsonl", "a") as f:
+        f.write(json.dumps(log_entry) + "\n")
+
+    return direction
+{"timestamp": 1755732017.7675138, "agentA": "A335", "agentB": "B335", "score": 0.33620584, "avg_history": 0.33620584, "delta": 0.0, "direction": "stable"}
+{"timestamp": 1755735643.2254503, "agentA": "alpha", "agentB": "beta", "score": 0.5, "avg_history": 0.5, "delta": 0.0, "direction": "stable"}
+{"timestamp": 1755735643.227184, "agentA": "beta", "agentB": "gamma", "score": 0.85, "avg_history": 0.8500000000000001, "delta": -1.1102230246251565e-16, "direction": "stable"}
+{"timestamp": 1755735643.2299197, "agentA": "gamma", "agentB": "delta", "score": 0.25, "avg_history": 0.25, "delta": 0.0, "direction": "stable"}

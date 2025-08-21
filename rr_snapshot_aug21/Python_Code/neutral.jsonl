@@ -1,0 +1,5 @@
+{"timestamp": 1755735643.2258072, "agentA": "alpha", "agentB": "beta", "score": 0.5, "direction": "stable", "fragment": "Echoes of recursion"}
+{"timestamp": 1755735643.2275589, "agentA": "beta", "agentB": "gamma", "score": 0.85, "direction": "stable", "fragment": "Semantic drift detected"}
+{"timestamp": 1755735643.230234, "agentA": "gamma", "agentB": "delta", "score": 0.25, "direction": "stable", "fragment": "Contradiction metabolized"}
+{"timestamp": 1755748793.9335694, "agentA": "What if contradiction is the seed of reinterpretation?", "agentB": "Echo", "score": 0.0, "direction": "no-history", "fragment": "No fragment provided"}
+{"timestamp": 1755748793.9434633, "agentA": "?", "agentB": "Echo", "score": 0.0, "direction": "no-history", "fragment": "No fragment provided"}

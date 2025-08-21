@@ -1,0 +1,34 @@
+{
+  "milestones": [
+    {
+      "name": "Alert harness & rotating JSONL logger",
+      "percent": 35
+    },
+    {
+      "name": "simulate_pair integration (smoke_test_simulate_pair.py)",
+      "percent": 15
+    },
+    {
+      "name": "Notifier integration (Slack/PagerDuty/SMTP)",
+      "percent": 10
+    },
+    {
+      "name": "Regression tests & pytest suite",
+      "percent": 10
+    },
+    {
+      "name": "CI/CD drift pipelines & self-revision loop",
+      "percent": 15
+    },
+    {
+      "name": "Documentation, peer review & packaging",
+      "percent": 15
+    }
+  ],
+  "overall_percent": 60,
+  "notes": [
+    "simulate_pair harness = smoke_test_simulate_pair.py",
+    "Next: point CI at smoke test and capture its exit code",
+    "Consider adding batching/back-off to notifier calls"
+  ]
+}

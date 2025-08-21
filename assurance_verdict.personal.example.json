@@ -1,0 +1,21 @@
+{
+  "trace_id": "uuid",
+  "agent": "truth_anchor|safety|commonsense|identity|resource",
+  "verdict": "allow|allow_with_guardrails|block|escalate",
+  "signals": {
+    "policy_breach": false,
+    "grounding_gap": 0.1,
+    "hallucination_risk": 0.07,
+    "coherence_drift": 0.03
+  },
+  "required_guardrails": [
+    "citation_required",
+    "rate_limit"
+  ],
+  "citations": [
+    {
+      "url": "knowledge_base://control/timekeeping"
+    }
+  ],
+  "explanation": "Change observed; within bounds; stable."
+}
