@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-08-22T08:20:00+10:00",
+  "pair": ["f001", "f002"],
+  "drift_type": "emotional",
+  "bias_vector": ["hope", "despair"],
+  "intensity": 0.8,
+  "status": "reinterpreted",
+  "notes": "Contradiction between optimism and loss. Reframed as layered grief.",
+  "source_stage": "first_pass",
+  "rehearsal_path": "preserved → reinterpreted",
+  "compost_flag": false,
+  "reinterpreted_output": {
+    "id": "r001",
+    "content": "Grief is the echo of hope that refused to vanish.",
+    "theme": "transformation"
+  }
+}

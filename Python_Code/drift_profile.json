@@ -1,0 +1,106 @@
+[
+  {
+    "pair": [
+      "f001",
+      "f002"
+    ],
+    "drift_type": "emotional",
+    "intensity": 0.8,
+    "bias_vector": [
+      "hope",
+      "despair"
+    ],
+    "notes": "Contradiction between optimism and loss. Reinterpreted as layered grief."
+  },
+  {
+    "pair": [
+      "f003",
+      "f004"
+    ],
+    "drift_type": "cognitive",
+    "intensity": 0.6,
+    "bias_vector": [
+      "acceptance",
+      "denial"
+    ],
+    "notes": "Tension between resolution and refusal. Composting recommended."
+  },
+  {
+    "pair": [
+      "d001",
+      "d002"
+    ],
+    "drift_type": "identity",
+    "intensity": 0.9,
+    "bias_vector": [
+      "fragmentation",
+      "integration"
+    ],
+    "notes": "Recursive contradiction\u00e2\u20ac\u201dideal for simulate_pair rehearsal."
+  },
+  {
+    "pair": [
+      "d003",
+      "d004"
+    ],
+    "drift_type": "temporal",
+    "intensity": 0.5,
+    "bias_vector": [
+      "past self",
+      "present self"
+    ],
+    "notes": "Mild drift. Preserved as parallel truths."
+  },
+  {
+    "pair": [
+      "f001",
+      "f002"
+    ],
+    "drift_type": "semantic",
+    "intensity": 0.7,
+    "bias_vector": [
+      "hope",
+      "despair"
+    ],
+    "notes": "Reframed f001 with f002"
+  },
+  {
+    "pair": [
+      "f003",
+      "f004"
+    ],
+    "drift_type": "semantic",
+    "intensity": 0.7,
+    "bias_vector": [
+      "acceptance",
+      "denial"
+    ],
+    "notes": "Reframed f003 with f004"
+  },
+  {
+    "pair": [
+      "d001",
+      "d002"
+    ],
+    "drift_type": "semantic",
+    "intensity": 0.7,
+    "bias_vector": [
+      "contradiction",
+      "integration"
+    ],
+    "notes": "Reframed d001 with d002"
+  },
+  {
+    "pair": [
+      "d003",
+      "d004"
+    ],
+    "drift_type": "semantic",
+    "intensity": 0.7,
+    "bias_vector": [
+      "fragmentation",
+      "reconciliation"
+    ],
+    "notes": "Reframed d003 with d004"
+  }
+]
