@@ -1,0 +1,20 @@
+[
+  {
+    "id": "frag_001",
+    "type": "preserved",
+    "label": "Echo of origin",
+    "text": "She said the sky was a mirror, and I believed her."
+  },
+  {
+    "id": "frag_002",
+    "type": "composted",
+    "label": "Drifted metaphor",
+    "text": "The mirror cracked, and memory spilled sideways."
+  },
+  {
+    "id": "frag_003",
+    "type": "anomaly",
+    "label": "Contradiction rehearsal",
+    "text": "I remember forgetting, and forgot remembering."
+  }
+]

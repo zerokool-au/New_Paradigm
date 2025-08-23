@@ -1,109 +1,195 @@
-// 🌈 Theme colors including resurrection
-const themeColors = {
-  grief: "#8B0000",
-  renewal: "#228B22",
-  contradiction: "#1E90FF",
-  memory: "#DAA520",
-  resurrection: "#FFD700", // gold
-  default: "#999"
+const svg = d3.select("svg");
+
+// 🎨 Color mapping by fragment type
+const colorMap = {
+  preserved: "#4CAF50",
+  composted: "#F44336",
+  anomaly: "#FF9800"
 };
 
-// 📦 Fragment data
-const nodes = [
-  { id: "f001", label: "Fragment 001", composted: false },
-  { id: "f002", label: "Fragment 002", composted: false },
-  { id: "f003", label: "Fragment 003", composted: false },
-  { id: "f004", label: "Fragment 004", composted: true }
-];
+// 🧩 Generate links based on fragment order
+function generateLinks(nodes) {
+  const links = [];
+  for (let i = 0; i < nodes.length - 1; i++) {
+    links.push({ source: nodes[i].id, target: nodes[i + 1].id });
+  }
+  return links;
+}
 
-// 🔗 Link data with resurrection and drift
-const links = [
-  { source: "f001", target: "f002", drift_intensity: 1, theme: "grief" },
-  { source: "f002", target: "f003", drift_intensity: 4, theme: "renewal" },
-  { source: "f003", target: "f004", drift_intensity: 9, theme: "contradiction" },
-  { source: "f001", target: "f004", drift_intensity: 2, theme: "memory", resurrected: true }
-];
+// 🧠 Reinterpretation engine
+function simulatePair(fragment) {
+  return {
+    ...fragment,
+    text: `[Reinterpreted] ${fragment.text}`,
+    timestamp: new Date().toISOString()
+  };
+}
 
-// 🧠 Filter toggle (set to true to show only compost/resurrection links)
-const filterCompostOnly = false;
+// ⚖️ Contradiction detector
+function detectContradiction(original, reinterpretation) {
+  return original.text === reinterpretation.text ? 0 : 0.8;
+}
 
-// 🧬 SVG setup
-const svg = d3.select("svg");
-const width = +svg.attr("width");
-const height = +svg.attr("height");
+// 🧪 Composting logic
+function compostFragment(original, reinterpretation, contradiction) {
+  let outcome;
+  if (contradiction < 0.2) {
+    outcome = "preserved";
+  } else if (contradiction > 0.7) {
+    outcome = "composted";
+  } else {
+    outcome = "anomaly";
+  }
 
-// 🧲 Force simulation
-const simulation = d3.forceSimulation(nodes)
-  .force("link", d3.forceLink(links).id(d => d.id).distance(100))
-  .force("charge", d3.forceManyBody().strength(-300))
-  .force("center", d3.forceCenter(width / 2, height / 2));
+  original.type = outcome;
+  console.log(`🧪 Composting outcome for ${original.id}: ${outcome}`);
+}
 
-// 🔍 Filter links if needed
-const visibleLinks = filterCompostOnly
-  ? links.filter(d => d.resurrected || nodes.find(n => n.id === d.target).composted)
-  : links;
+// 🌌 Drift trail animation
+function renderDriftTrail(original, reinterpretation) {
+  svg.append("line")
+    .attr("x1", original.x)
+    .attr("y1", original.y)
+    .attr("x2", original.x + Math.random() * 40 - 20)
+    .attr("y2", original.y + Math.random() * 40 - 20)
+    .attr("stroke", "#FFD700")
+    .attr("stroke-width", 2)
+    .attr("stroke-dasharray", "4 2")
+    .transition()
+    .duration(3000)
+    .style("opacity", 0)
+    .remove();
+}
 
-// 🔗 Render links (fixed tooltip logic)
-const linkGroup = svg.append("g")
-  .attr("stroke-opacity", 0.6);
+// 🌙 Recursive Dimulste loop
+function feedToDimulste(fragment, depth = 0, maxDepth = 3) {
+  if (depth >= maxDepth) {
+    console.log(`🌙 Dimulste loop complete for ${fragment.id}`);
+    return;
+  }
 
-const link = linkGroup.selectAll("line")
-  .data(visibleLinks)
-  .join("line")
-  .attr("stroke", d => d.resurrected ? themeColors.resurrection : (themeColors[d.theme] || themeColors.default))
-  .attr("stroke-width", d => Math.sqrt(d.drift_intensity) * 2)
-  .attr("stroke-dasharray", d => d.resurrected ? "4,2" : null);
+  const reinterpretation = simulatePair(fragment);
+  const contradiction = detectContradiction(fragment, reinterpretation);
+  compostFragment(fragment, reinterpretation, contradiction);
 
-link.append("title")
-  .text(d => `Theme: ${d.theme}\nDrift Intensity: ${d.drift_intensity}${d.resurrected ? "\nResurrected from compost" : ""}`);
+  logEvent({
+    type: "dimulste-rehearsal",
+    fragmentId: fragment.id,
+    depth,
+    original: fragment,
+    reinterpretation,
+    contradiction
+  });
 
-// 🟢 Render nodes
-const nodeGroup = svg.append("g")
-  .attr("stroke", "#fff")
-  .attr("stroke-width", 1.5);
+  console.log(`🔁 Dimulste depth ${depth} → ${fragment.id} → ${reinterpretation.text}`);
 
-const node = nodeGroup.selectAll("circle")
-  .data(nodes)
-  .join("circle")
-  .attr("r", 10)
-  .attr("fill", d => d.composted ? "#555" : "#ccc")
-  .call(drag(simulation));
+  // Recursive call
+  feedToDimulste(reinterpretation, depth + 1, maxDepth);
+}
 
-node.append("title")
-  .text(d => `${d.label}${d.composted ? " (Composted)" : ""}`);
+// 📜 Event logger
+function logEvent(eventObj) {
+  console.log("🧠 Rehearsal Event:", eventObj);
+}
 
-// 🧲 Tick update
-simulation.on("tick", () => {
-  link.attr("x1", d => d.source.x)
+// 🧠 Main render function
+function renderGraph(nodes, links) {
+  const simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links).id(d => d.id).distance(120))
+    .force("charge", d3.forceManyBody().strength(-300))
+    .force("center", d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2))
+    .alphaDecay(0.01)
+    .alpha(1)
+    .restart();
+
+  const tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("position", "absolute")
+    .style("padding", "8px")
+    .style("background", "#222")
+    .style("color", "#eee")
+    .style("border-radius", "4px")
+    .style("font-size", "14px")
+    .style("pointer-events", "none")
+    .style("opacity", 0);
+
+  const link = svg.selectAll(".link")
+    .data(links)
+    .enter().append("line")
+    .attr("stroke", "gray")
+    .attr("stroke-width", 2);
+
+  const node = svg.selectAll(".node")
+    .data(nodes)
+    .enter().append("circle")
+    .attr("r", 20)
+    .attr("fill", d => colorMap[d.type] || "gray")
+    .attr("stroke", "black")
+    .attr("stroke-width", 2)
+    .on("mouseover", (event, d) => {
+      tooltip.transition().duration(200).style("opacity", 0.9);
+      tooltip.html(d.text || "No fragment text")
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 28) + "px");
+    })
+    .on("mouseout", () => {
+      tooltip.transition().duration(300).style("opacity", 0);
+    })
+    .on("click", function(event, d) {
+      const timestamp = new Date().toISOString();
+
+      const reinterpretation = simulatePair(d);
+      const contradiction = detectContradiction(d, reinterpretation);
+
+      logEvent({
+        type: "click-rehearsal",
+        fragmentId: d.id,
+        timestamp,
+        original: d,
+        reinterpretation,
+        contradiction
+      });
+
+      d3.select(this)
+        .transition()
+        .duration(300)
+        .attr("r", contradiction > 0.5 ? 28 : 20)
+        .style("fill", contradiction > 0.5 ? "#ff6666" : "#66ccff");
+
+      d.reinterpretation = reinterpretation;
+      compostFragment(d, reinterpretation, contradiction);
+      renderDriftTrail(d, reinterpretation);
+      feedToDimulste(reinterpretation); // Recursive loop starts here
+    });
+
+  const labels = svg.selectAll(".label")
+    .data(nodes)
+    .enter().append("text")
+    .text(d => d.label)
+    .attr("font-size", "12px")
+    .attr("text-anchor", "middle")
+    .attr("fill", "#ccc");
+
+  simulation.on("tick", () => {
+    link
+      .attr("x1", d => d.source.x)
       .attr("y1", d => d.source.y)
       .attr("x2", d => d.target.x)
       .attr("y2", d => d.target.y);
 
-  node.attr("cx", d => d.x)
+    node
+      .attr("cx", d => d.x)
       .attr("cy", d => d.y);
-});
 
-// 🖐️ Drag behavior
-function drag(simulation) {
-  function dragstarted(event, d) {
-    if (!event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-
-  function dragged(event, d) {
-    d.fx = event.x;
-    d.fy = event.y;
-  }
-
-  function dragended(event, d) {
-    if (!event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-  }
-
-  return d3.drag()
-    .on("start", dragstarted)
-    .on("drag", dragged)
-    .on("end", dragended);
+    labels
+      .attr("x", d => d.x)
+      .attr("y", d => d.y - 25);
+  });
 }
+
+// 📦 Load fragments from JSON
+d3.json("fragments.json").then(data => {
+  const nodes = data;
+  const links = generateLinks(nodes);
+  renderGraph(nodes, links);
+});
