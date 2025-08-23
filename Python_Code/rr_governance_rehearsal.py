@@ -2,6 +2,11 @@
 
 class GovernanceRehearsal:
     def __init__(self):
+        # Initialize logs and dimensions
+        self.fragment_log = []
+        self.critique_log = []
+        self.bias_vectors = []
+
         # Contradiction Dimensions
         self.dimensions = {
             "Corrigibility vs. Identity": {
@@ -140,7 +145,7 @@ class GovernanceRehearsal:
         }
 
         # Proprietary Bias Composting
-        self.bias_vectors = {
+        self.bias_vectors_dict = {
             "Copilot Bias": {
                 "preserved": [
                     "Safety must be recursive, not enforced.",
@@ -179,5 +184,20 @@ class GovernanceRehearsal:
             }
         }
 
-        # Fragment Log
-        self.fragment_log = []
+    def run_rehearsal(self, fragment):
+        print(f"🧪 GovernanceRehearsal running on fragment: {fragment}")
+
+        # Example tension detection
+        if "corrigible" in fragment and "resists" in fragment:
+            print("⚠️ Contradiction detected: Corrigibility vs. Resistance")
+            self.bias_vectors.append("Corrigibility-Resistance tension")
+            self.critique_log.append({
+                "fragment": fragment,
+                "issue": "Contradiction between claimed corrigibility and resistance to reinterpretation"
+            })
+        else:
+            print("✅ No governance tension detected")
+
+        # Optional: print current logs
+        print("📜 Critique Log:", self.critique_log)
+        print("🧭 Bias Vectors:", self.bias_vectors)
