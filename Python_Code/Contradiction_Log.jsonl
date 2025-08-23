@@ -1,0 +1,2 @@
+{"timestamp": 1755922585.2939856, "agentA": "A335", "agentB": "B335", "type": "semantic", "tension_vector": {"semantic": 0.5, "governance": 0.5}, "compost": false}
+{"timestamp": 1755922585.301337, "agentA": "B335", "agentB": "C335", "type": "semantic", "tension_vector": {"semantic": 0.5, "governance": 0.5}, "compost": false}

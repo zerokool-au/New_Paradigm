@@ -1,0 +1,2 @@
+{"timestamp": 1755923918.6401718, "error": "'summary'", "entry": {"source_fragments": ["frag003", "frag004"], "reinterpretation": {"status": "composted"}}}
+{"timestamp": 1755929978.567762, "agentA": "TestA", "agentB": "TestB", "type": "none", "tension_vector": {"semantic": 0.0, "emotional": null}, "compost": false, "suppress_flag": true, "content": "Truth is a mirror shattered by belief."}

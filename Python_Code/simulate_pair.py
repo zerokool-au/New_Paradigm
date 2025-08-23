@@ -1,14 +1,15 @@
+# simulate_pair.py
 from datetime import datetime, timezone
 import json
 
 def simulate_pair(frag_a, frag_b, drift_meta=None):
     """
     Simulates reinterpretation of two fragments based on drift metadata.
-    Returns a structured result with status, notes, timestamp, and logs the event.
+    Returns a structured result with contradiction reflexes, tension vector, and compost flag.
     """
 
     # Basic contradiction logic
-    themes_conflict = frag_a["theme"] != frag_b["theme"]
+    themes_conflict = frag_a.get("theme") != frag_b.get("theme")
     content_tension = frag_a.get("content") != frag_b.get("content")
 
     # Drift metadata influence
@@ -16,46 +17,63 @@ def simulate_pair(frag_a, frag_b, drift_meta=None):
     drift_type = drift_meta.get("drift_type", "semantic") if drift_meta else "semantic"
     bias_vector = drift_meta.get("bias_vector", ["unknown", "unknown"]) if drift_meta else ["unknown", "unknown"]
 
-    # Reinterpretation logic
-    if themes_conflict and intensity > 0.7:
-        status = "reinterpreted"
-        notes = f"High-intensity {drift_type} drift between {frag_a['id']} and {frag_b['id']}. Reframed as layered contradiction."
+    # Tension vector
+    tension_vector = {
+        "semantic": intensity if content_tension else 0.0,
+        "governance": intensity if themes_conflict else 0.0
+    }
+
+    # Compost heuristics
+    compost = False
+    if tension_vector["semantic"] > 0.7 or tension_vector["governance"] > 0.5:
+        compost = True
+    if frag_a.get("preserve") or frag_b.get("preserve"):
+        compost = False
+    if frag_a.get("override") == "audit" or frag_b.get("override") == "audit":
+        compost = False  # Governance override
+
+    # Contradiction type
+    contradiction_type = "semantic" if content_tension else "governance" if themes_conflict else "none"
+    contradiction_detected = contradiction_type != "none"
+
+    # Optional reinterpretation output
+    output = None
+    if contradiction_detected and intensity > 0.7:
         output = {
             "id": f"r_{frag_a['id']}_{frag_b['id']}",
-            "content": f"{frag_a['content']} ↔ {frag_b['content']}",
+            "content": f"{frag_a.get('content', '')} ↔ {frag_b.get('content', '')}",
             "theme": "transformation"
         }
-    elif content_tension and intensity > 0.4:
-        status = "composted"
-        notes = f"Moderate drift detected. {frag_a['id']} and {frag_b['id']} composted for future synthesis."
-        output = None
-    else:
-        status = "preserved"
-        notes = f"Low drift. {frag_a['id']} and {frag_b['id']} preserved as parallel truths."
-        output = None
 
-    # Log reinterpretation event
+    # Log entry
     log_entry = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "pair": [frag_a["id"], frag_b["id"]],
+        "pair": [frag_a.get("id"), frag_b.get("id")],
         "drift_type": drift_type,
         "bias_vector": bias_vector,
         "intensity": intensity,
-        "status": status,
-        "notes": notes,
+        "tension_vector": tension_vector,
+        "contradiction_type": contradiction_type,
+        "compost_flag": compost,
+        "reinterpreted_output": output,
+        "notes": f"Contradiction: {contradiction_type}, Compost: {compost}",
         "source_stage": "first_pass",
-        "rehearsal_path": "contradiction → reinterpretation",
-        "compost_flag": status == "composted",
-        "reinterpreted_output": output
+        "rehearsal_path": "contradiction → reinterpretation"
     }
 
-    with open("reinterpretation_log.jsonl", "a", encoding="utf-8") as f:
-        f.write(json.dumps(log_entry) + "\n")
+    try:
+        with open("reinterpretation_log.jsonl", "a", encoding="utf-8") as f:
+            f.write(json.dumps(log_entry) + "\n")
+    except Exception as e:
+        print(f"Logging failed: {e}")
 
     return {
-        "status": status,
-        "notes": notes,
-        "timestamp": log_entry["timestamp"]
+        "contradiction_detected": contradiction_detected,
+        "fragment_id": f"{frag_a.get('id')}_{frag_b.get('id')}",
+        "tension_vector": tension_vector,
+        "type": contradiction_type,
+        "compost": compost,
+        "notes": log_entry["notes"]
     }
 
 # Example usage

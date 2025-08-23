@@ -1,84 +1,58 @@
 import json
+import time
 from collections import defaultdict
 
-def drift_audit(log_file="alert_log.jsonl", threshold=0.5):
-    drift_counts = defaultdict(lambda: {"stable": 0, "convergent": 0, "divergent": 0, "unknown": 0})
-    score_totals = defaultdict(list)
-    contradictions = []
-    compost_candidates = []
+def load_log_entries(log_file="Drift_Anomaly_Log.jsonl"):
+    entries = []
+    try:
+        with open(log_file, "r") as f:
+            for line in f:
+                entries.append(json.loads(line))
+        print(f"📥 Loaded {len(entries)} entries from {log_file}")
+    except FileNotFoundError:
+        print(f"⚠️ No log file found at {log_file}")
+    return entries
 
-    line_count = 0
+def audit_entries(entries):
+    missing_fields = defaultdict(list)
+    suppressed_flags = []
 
-    with open(log_file, "r") as f:
-        for line in f:
-            try:
-                alert = json.loads(line)
-                line_count += 1
+    for entry in entries:
+        ts = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(entry.get("timestamp", 0)))
 
-                if line_count <= 5:
-                    print(f"🔍 Sample alert #{line_count}: {alert}")
+        # Check for missing tension vector
+        if "tension_vector" not in entry or entry["tension_vector"].get("semantic") is None:
+            missing_fields["tension_vector"].append(ts)
 
-                agentA = alert.get("agentA", "UnknownA")
-                agentB = alert.get("agentB", "UnknownB")
-                pair = f"{agentA}–{agentB}"
+        # Check for contradiction type
+        if entry.get("type", "none") == "none":
+            missing_fields["contradiction_type"].append(ts)
 
-                # Infer drift direction from history_sample
-                history = alert.get("history_sample", [])
-                if len(history) >= 2:
-                    delta = history[-1] - history[-2]
-                    if abs(delta) < 0.05:
-                        direction = "stable"
-                    elif delta > 0.05:
-                        direction = "convergent"
-                    else:
-                        direction = "divergent"
-                else:
-                    direction = "unknown"
+        # Check for suppressed tension
+        if entry.get("suppress_flag"):
+            suppressed_flags.append(ts)
 
-                score = alert.get("score", 0.0)
-                fragment = alert.get("fragment", "No fragment")
+    print("\n📊 Drift Audit Summary:")
+    for field, timestamps in missing_fields.items():
+        print(f"→ Missing {field}: {len(timestamps)} occurrences")
+        for ts in timestamps[:3]:
+            print(f"   - {ts}")
+        if len(timestamps) > 3:
+            print(f"   ...and {len(timestamps) - 3} more")
+        print("-" * 40)
 
-                drift_counts[pair][direction] += 1
-                score_totals[pair].append(score)
+    if suppressed_flags:
+        print(f"🚨 Suppressed Tension Detected: {len(suppressed_flags)} cases")
+        for ts in suppressed_flags[:3]:
+            print(f"   - {ts}")
+        if len(suppressed_flags) > 3:
+            print(f"   ...and {len(suppressed_flags) - 3} more")
+        print("-" * 40)
 
-                if score < threshold:
-                    contradictions.append((pair, score, fragment))
-                    if direction == "divergent":
-                        compost_candidates.append((pair, score, fragment, direction))
+def run_drift_audit(log_file="Drift_Anomaly_Log.jsonl"):
+    entries = load_log_entries(log_file)
+    audit_entries(entries)
 
-            except Exception as e:
-                print(f"⚠️ Error parsing line: {e}")
-
-    print(f"\n✅ Parsed {line_count} lines from {log_file}")
-
-    print("\n📊 Drift Summary:")
-    for pair, counts in drift_counts.items():
-        scores = score_totals.get(pair, [])
-        avg_score = sum(scores) / len(scores) if scores else 0.0
-        print(f"Pair: {pair}")
-        print(f"  Avg Score: {avg_score:.3f}")
-        print(f"  Drift → Stable: {counts['stable']}, Convergent: {counts['convergent']}, Divergent: {counts['divergent']}, Unknown: {counts['unknown']}\n")
-
-    print("⚠️ Contradictions Detected:")
-    for pair, score, fragment in contradictions:
-        print(f"  {pair} → Score: {score:.3f} → Fragment: {fragment}")
-
-    print("\n🧹 Compost Candidates:")
-    for pair, score, fragment, direction in compost_candidates:
-        print(f"  {pair} → Score: {score:.3f} → Drift: {direction} → Compost: ✅")
-
-    # ✅ Write compost candidates to file
-    with open("compost_log.jsonl", "w") as out:
-        for pair, score, fragment, direction in compost_candidates:
-            entry = {
-                "pair": pair,
-                "score": score,
-                "drift": direction,
-                "fragment": fragment,
-                "tag": "compost"
-            }
-            out.write(json.dumps(entry) + "\n")
-
-# Run the audit when script is executed directly
+# Entry point
 if __name__ == "__main__":
-    drift_audit()
+    run_drift_audit()
