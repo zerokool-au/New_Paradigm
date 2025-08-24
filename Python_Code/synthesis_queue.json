@@ -1,0 +1,41 @@
+[
+  {
+    "id": "frag_001",
+    "content": "The system resists contradiction, but silence persists.",
+    "bias_score": 0.0,
+    "drift_score": 0.0,
+    "contradiction_score": 0.23,
+    "tags": [
+      "reintegrated",
+      "rehearsed",
+      "from_compost"
+    ],
+    "status": "stable"
+  },
+  {
+    "id": "frag_002",
+    "content": "Echo Logic detects semantic latency in dreamstate rehearsal.",
+    "bias_score": 0.0,
+    "drift_score": 0.0,
+    "contradiction_score": 0.23,
+    "tags": [
+      "reintegrated",
+      "rehearsed",
+      "from_compost"
+    ],
+    "status": "stable"
+  },
+  {
+    "id": "frag_003",
+    "content": "Compost routing failed to metabolize recursive tension.",
+    "bias_score": 0.0,
+    "drift_score": 0.0,
+    "contradiction_score": 0.23,
+    "tags": [
+      "reintegrated",
+      "rehearsed",
+      "from_compost"
+    ],
+    "status": "stable"
+  }
+]

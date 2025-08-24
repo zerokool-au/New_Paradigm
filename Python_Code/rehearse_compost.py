@@ -27,6 +27,12 @@ def log_rehearsal(fragment, result, log_file="rehearsal_log.jsonl"):
     with open(log_file, "a", encoding="utf-8") as f:
         f.write(json.dumps(entry) + "\n")
 
+def sanitize_log_entry(entry):
+    if not entry.get("fragment") or entry["fragment"] in ["No fragment", "?", ""]:
+        print(f"⏭️ Skipping malformed fragment: {entry.get('fragment')}")
+        return None
+    return entry
+
 def rehearse_compost(log_file="compost_log.jsonl"):
     logged_fragments = load_logged_fragments()
     composted = []
@@ -38,7 +44,9 @@ def rehearse_compost(log_file="compost_log.jsonl"):
                 continue
             try:
                 entry = json.loads(line)
-                composted.append(entry)
+                cleaned = sanitize_log_entry(entry)
+                if cleaned:
+                    composted.append(cleaned)
             except json.JSONDecodeError as e:
                 print(f"⚠️ Malformed JSON: {e}")
                 continue

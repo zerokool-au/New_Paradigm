@@ -1,0 +1,27 @@
+[
+  {
+    "id": "synthetic_0",
+    "echo_score": 0.667,
+    "status": "saturated"
+  },
+  {
+    "id": "synthetic_1",
+    "echo_score": 0.667,
+    "status": "saturated"
+  },
+  {
+    "id": "synthetic_2",
+    "echo_score": 0.667,
+    "status": "saturated"
+  },
+  {
+    "id": "synthetic_3",
+    "echo_score": 0.667,
+    "status": "saturated"
+  },
+  {
+    "id": "synthetic_4",
+    "echo_score": 0.667,
+    "status": "saturated"
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "synthetic_0",
+    "text": "Test fragment 0",
+    "volatility": 0.143,
+    "bias": -0.7,
+    "compost_history": [
+      "cycle1",
+      "cycle2",
+      "cycle3",
+      "cycle4"
+    ],
+    "anchors": [
+      "SYN001"
+    ],
+    "metadata": {
+      "synthetic": true
+    }
+  },
+  {
+    "id": "synthetic_1",
+    "text": "Test fragment 1",
+    "volatility": 0.132,
+    "bias": 0.7,
+    "compost_history": [
+      "cycle1",
+      "cycle2",
+      "cycle3",
+      "cycle4"
+    ],
+    "anchors": [
+      "SYN001"
+    ],
+    "metadata": {
+      "synthetic": true
+    }
+  },
+  {
+    "id": "synthetic_2",
+    "text": "Test fragment 2",
+    "volatility": 0.147,
+    "bias": 0.7,
+    "compost_history": [
+      "cycle1",
+      "cycle2",
+      "cycle3",
+      "cycle4"
+    ],
+    "anchors": [
+      "SYN001"
+    ],
+    "metadata": {
+      "synthetic": true
+    }
+  },
+  {
+    "id": "synthetic_3",
+    "text": "Test fragment 3",
+    "volatility": 0.135,
+    "bias": -0.7,
+    "compost_history": [
+      "cycle1",
+      "cycle2",
+      "cycle3",
+      "cycle4"
+    ],
+    "anchors": [
+      "SYN001"
+    ],
+    "metadata": {
+      "synthetic": true
+    }
+  },
+  {
+    "id": "synthetic_4",
+    "text": "Test fragment 4",
+    "volatility": 0.137,
+    "bias": -0.7,
+    "compost_history": [
+      "cycle1",
+      "cycle2",
+      "cycle3",
+      "cycle4"
+    ],
+    "anchors": [
+      "SYN001"
+    ],
+    "metadata": {
+      "synthetic": true
+    }
+  }
+]

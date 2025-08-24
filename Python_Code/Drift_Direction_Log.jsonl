@@ -1,8 +1,128 @@
 import json
 import time
+import random
+from collections import Counter
+from simulate_pair_logger import simulate_pair_with_logging
+from simulate_pair import simulate_pair
+from rehearse_compost import rehearse_compost
+from log_router import route_log  # ✅ Centralized logging
 
+# 🧠 Compost Ledger
+compost_ledger = []
+recovery_ledger = []
+reinterpretation_pool = []
+
+def log_fragment(fragment_id, status, drift_type, cycle_id, rationale):
+    entry = {
+        "fragment_id": fragment_id,
+        "status": status,
+        "drift_type": drift_type,
+        "cycle_id": cycle_id,
+        "rationale": rationale
+    }
+    compost_ledger.append(entry)
+
+def log_recovery(fragment_id, echo_score, echo_type, context_id, status):
+    entry = {
+        "fragment_id": fragment_id,
+        "echo_score": echo_score,
+        "echo_type": echo_type,
+        "context_id": context_id,
+        "status": status  # 'pending', 'ready', 'stalled'
+    }
+    recovery_ledger.append(entry)
+    if status == "ready":
+        reinterpretation_pool.append(entry)
+
+def compost_stats():
+    drift_counter = Counter([entry["drift_type"] for entry in compost_ledger if entry["status"] == "composted"])
+    rationale_counter = Counter([entry["rationale"] for entry in compost_ledger if entry["status"] == "composted"])
+    return {
+        "drift_type_distribution": drift_counter,
+        "common_rationales": rationale_counter
+    }
+
+def lineage_trace():
+    lineage = {}
+    for entry in compost_ledger:
+        fid = entry["fragment_id"]
+        if fid not in lineage:
+            lineage[fid] = []
+        lineage[fid].append(entry["cycle_id"])
+    return lineage
+
+def rehearse_echo(fragments, context_fragment):
+    print("\n🔁 Echo Rehearsal:")
+    for frag in fragments:
+        result = simulate_pair_with_logging(simulate_pair)(frag, context_fragment)
+        echo_type = result.get("type", "none")
+        echo_score = result.get("tension_vector", {}).get("semantic", 0.0)
+
+        # 🔧 Semantic nudging
+        echo_score += random.uniform(-0.05, 0.05)
+        echo_score = max(0.0, min(echo_score, 1.0))
+
+        # Original logic
+        if echo_score < 0.2:
+            status = "ready"
+        elif echo_score < 0.4:
+            status = "stalled"
+        else:
+            status = "pending"
+
+        # 🔧 Force synthesis for debug
+        status = "ready"
+
+        log_recovery(frag.id, echo_score, echo_type, context_fragment.id, status)
+        print(f"Echo {frag.id} vs {context_fragment.id} → {echo_type} ({echo_score:.2f}) → {status}")
+
+def synthesize_recovery():
+    print("\n🌱 Synthesis Attempt:")
+    synthesis_context = Fragment("SYN001", theme="integration", content="Contradiction is not erased—it is metabolized into new meaning.")
+
+    for entry in recovery_ledger:
+        if entry["status"] == "ready":
+            frag = Fragment(entry["fragment_id"], theme="recovery", content="Recovered fragment content")
+            result = simulate_pair_with_logging(simulate_pair)(frag, synthesis_context)
+            synth_type = result.get("type", "none")
+            synth_score = result.get("tension_vector", {}).get("semantic", 0.0)
+
+            print(f"Synthesize {frag.id} → {synth_type} ({synth_score:.2f})")
+
+# 🧬 Fragment Mock
+class Fragment(dict):
+    def __init__(self, frag_id, theme="identity", content="default"):
+        super().__init__()
+        self["id"] = frag_id
+        self["theme"] = theme
+        self["content"] = content
+
+    @property
+    def id(self):
+        return self["id"]
+
+    @property
+    def theme(self):
+        return self["theme"]
+
+    @property
+    def content(self):
+        return self["content"]
+
+    def __repr__(self):
+        return f"Fragment(id={self.id}, theme={self.theme}, content={self.content[:40]}...)"
+
+def load_fragments():
+    return [
+        Fragment("A335", theme="identity", content="The system remembers."),
+        Fragment("B335", theme="governance", content="The system forgets."),
+        Fragment("C335", theme="identity", content="The system remembers."),
+        Fragment("D999", theme="identity", content="Contradiction is irreversible. Memory must be erased."),
+        Fragment("E999", theme="recovery", content="Contradiction is compost. Memory is metabolized.")
+    ]
+
+# 🌀 Drift Direction Reflex
 def classify_drift_direction(agentA, agentB, score, history_sample):
-    # Simple heuristic: compare current score to history
     avg_history = sum(history_sample) / len(history_sample)
     delta = score - avg_history
 
@@ -27,22 +147,149 @@ def classify_drift_direction(agentA, agentB, score, history_sample):
         f.write(json.dumps(log_entry) + "\n")
 
     return direction
-{"timestamp": 1755732017.7675138, "agentA": "A335", "agentB": "B335", "score": 0.33620584, "avg_history": 0.33620584, "delta": 0.0, "direction": "stable"}
-{"timestamp": 1755735643.2254503, "agentA": "alpha", "agentB": "beta", "score": 0.5, "avg_history": 0.5, "delta": 0.0, "direction": "stable"}
-{"timestamp": 1755735643.227184, "agentA": "beta", "agentB": "gamma", "score": 0.85, "avg_history": 0.8500000000000001, "delta": -1.1102230246251565e-16, "direction": "stable"}
-{"timestamp": 1755735643.2299197, "agentA": "gamma", "agentB": "delta", "score": 0.25, "avg_history": 0.25, "delta": 0.0, "direction": "stable"}
-{"timestamp": 1755921701.9772224, "agentA": "A335", "agentB": "B335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
-{"timestamp": 1755921701.9789639, "agentA": "A335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
-{"timestamp": 1755921701.9826887, "agentA": "B335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
-{"timestamp": 1755922010.159937, "agentA": "A335", "agentB": "B335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
-{"timestamp": 1755922010.1649976, "agentA": "A335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
-{"timestamp": 1755922010.1671228, "agentA": "B335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
-{"timestamp": 1755922144.8274572, "agentA": "A335", "agentB": "B335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
-{"timestamp": 1755922144.8326993, "agentA": "A335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
-{"timestamp": 1755922144.8347912, "agentA": "B335", "agentB": "C335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
-{"timestamp": 1755922505.1318018, "agentA": "A335", "agentB": "B335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
-{"timestamp": 1755922505.136966, "agentA": "A335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
-{"timestamp": 1755922505.1384041, "agentA": "B335", "agentB": "C335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
-{"timestamp": 1755922585.2947028, "agentA": "A335", "agentB": "B335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
-{"timestamp": 1755922585.2998807, "agentA": "A335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
-{"timestamp": 1755922585.3019578, "agentA": "B335", "agentB": "C335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+
+# 🧪 Dimulste Loop
+def run_dimulste_loop():
+    global compost_ledger, recovery_ledger, reinterpretation_pool
+    compost_ledger = []
+    recovery_ledger = []
+    reinterpretation_pool = []
+
+    fragments = load_fragments()
+    for i in range(len(fragments)):
+        for j in range(i + 1, len(fragments)):
+            frag_a = fragments[i]
+            frag_b = fragments[j]
+
+            result = simulate_pair_with_logging(simulate_pair)(frag_a, frag_b)
+            route_log(frag_a, frag_b, result, source="dimulste_loop")
+
+            print(f"Rehearsed {frag_a.id} vs {frag_b.id}: {result.get('type', 'no contradiction')}")
+
+            compost_trigger = (
+                result.get("type") == "contradiction"
+                or result.get("tension_vector", {}).get("semantic", 0.0) > 0.4
+            )
+
+            if compost_trigger:
+                print(f"🧠 Compost triggered for {frag_a.id} and {frag_b.id}")
+                result["compost"] = True
+                result["drift_type"] = result.get("type", "semantic")
+                result["rationale"] = (
+                    "contradiction unresolved" if result.get("type") == "contradiction"
+                    else "high semantic tension"
+                )
+
+            if result.get("compost"):
+                print(f"→ Composting {frag_a.id} and {frag_b.id}")
+                rehearse_compost(log_file="compost_log.jsonl")
+
+                for frag in [frag_a, frag_b]:
+                    log_fragment(
+                        fragment_id=frag.id,
+                        status="composted",
+                        drift_type=result.get("drift_type", "semantic"),
+                        cycle_id="dimulste_v1",
+                        rationale=result.get("rationale", "unresolved tension")
+                    )
+
+            score = result.get("tension_vector", {}).get("semantic", 0.0)
+            history_sample = [0.49250445, 0.17990723]
+            direction = classify_drift_direction(frag_a.id, frag_b.id, score, history_sample)
+            print(f"Drift direction: {direction}")
+
+    stats = compost_stats()
+    print("\n🧠 Compost Analytics:")
+    print("Drift Types →", stats["drift_type_distribution"])
+    print("Rationales →", stats["common_rationales"])
+
+    lineage = lineage_trace()
+    print("\n🧬 Compost Lineage:")
+    for fid, cycles in lineage.items():
+        print(f"Fragment {fid} → Cycles: {cycles}")
+
+    composted_ids = set([entry["fragment_id"] for entry in compost_ledger])
+    composted_frags = [f for f in load_fragments() if f.id in composted_ids]
+    context_frag = Fragment("Z999", theme="recovery", content="Contradiction is compost.")
+    rehearse_echo(composted_frags, context_frag)
+
+    print("\n🧠 Recovery Ledger:")
+    for entry in recovery_ledger:
+        print(f"{entry['fragment_id']} → {entry['status']} ({entry['echo_score']:.2f})")
+
+    synthesize_recovery()
+    print("\n✅ RR loop completed and exited cleanly.")
+
+# 🚀 Entry Point
+if __name__ == "__main__":
+    run_dimulste_loop()
+{"timestamp": 1755995000.8486624, "agentA": "A335", "agentB": "B335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995000.8504863, "agentA": "A335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
+{"timestamp": 1755995000.8549092, "agentA": "A335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995000.8594553, "agentA": "A335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995000.8668003, "agentA": "B335", "agentB": "C335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995000.8716528, "agentA": "B335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995000.8757043, "agentA": "B335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995000.8832774, "agentA": "C335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995000.8880484, "agentA": "C335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995000.891985, "agentA": "D999", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995242.7380352, "agentA": "A335", "agentB": "B335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995242.7397845, "agentA": "A335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
+{"timestamp": 1755995242.7442706, "agentA": "A335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995242.7484748, "agentA": "A335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995242.752651, "agentA": "B335", "agentB": "C335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995242.7566, "agentA": "B335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995242.7624156, "agentA": "B335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995242.766993, "agentA": "C335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995242.7717197, "agentA": "C335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995242.7776842, "agentA": "D999", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995400.3229265, "agentA": "A335", "agentB": "B335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995400.3245966, "agentA": "A335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
+{"timestamp": 1755995400.3291469, "agentA": "A335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995400.3331816, "agentA": "A335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995400.3393545, "agentA": "B335", "agentB": "C335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995400.3436756, "agentA": "B335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995400.3480246, "agentA": "B335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995400.3540554, "agentA": "C335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995400.3585048, "agentA": "C335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755995400.3632934, "agentA": "D999", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996159.206148, "agentA": "A335", "agentB": "B335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996159.2083054, "agentA": "A335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
+{"timestamp": 1755996159.212508, "agentA": "A335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996159.21689, "agentA": "A335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996159.221379, "agentA": "B335", "agentB": "C335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996159.2281952, "agentA": "B335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996159.232644, "agentA": "B335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996159.2368631, "agentA": "C335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996159.2449138, "agentA": "C335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996159.249321, "agentA": "D999", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996827.3403168, "agentA": "A335", "agentB": "B335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996827.341942, "agentA": "A335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
+{"timestamp": 1755996827.3445003, "agentA": "A335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996827.34703, "agentA": "A335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996827.3517234, "agentA": "B335", "agentB": "C335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996827.3614829, "agentA": "B335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996827.3660855, "agentA": "B335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996827.376433, "agentA": "C335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996827.3805757, "agentA": "C335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996827.3894944, "agentA": "D999", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996836.2955792, "agentA": "A335", "agentB": "B335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996836.2973077, "agentA": "A335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
+{"timestamp": 1755996836.3015382, "agentA": "A335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996836.306682, "agentA": "A335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996836.3111877, "agentA": "B335", "agentB": "C335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996836.3160472, "agentA": "B335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996836.3216994, "agentA": "B335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996836.3252997, "agentA": "C335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996836.3300247, "agentA": "C335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755996836.336128, "agentA": "D999", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755997249.2098176, "agentA": "A335", "agentB": "B335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755997249.2115543, "agentA": "A335", "agentB": "C335", "score": 0.0, "avg_history": 0.33620584, "delta": -0.33620584, "direction": "convergent"}
+{"timestamp": 1755997249.2159503, "agentA": "A335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755997249.2219381, "agentA": "A335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755997249.2262478, "agentA": "B335", "agentB": "C335", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755997249.229906, "agentA": "B335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755997249.2358205, "agentA": "B335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755997249.2398355, "agentA": "C335", "agentB": "D999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755997249.2434902, "agentA": "C335", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
+{"timestamp": 1755997249.2475538, "agentA": "D999", "agentB": "E999", "score": 0.5, "avg_history": 0.33620584, "delta": 0.16379416000000002, "direction": "divergent"}
