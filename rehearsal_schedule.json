@@ -1,0 +1,10 @@
+{
+  "cycle": "v2.3.2",
+  "timestamp": "2025-08-24T15:45:00+10:00",
+  "focus": [
+    "reintegration logic",
+    "synthesis queue refinement",
+    "bias tension logging",
+    "echo pass-through for semantic drift"
+  ]
+}
