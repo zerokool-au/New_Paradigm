@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RR Visualizer</title>
+
+  <!-- ✅ Load D3.js -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background-color: #111;
+      color: #eee;
+      font-family: sans-serif;
+      overflow: hidden;
+    }
+
+    svg {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- 🧬 RR Visual Canvas -->
+  <svg></svg>
+
+  <!-- 🚀 Load RR Visualizer Logic -->
+  <script type="module" src="visualizer.js"></script>
+</body>
+</html>

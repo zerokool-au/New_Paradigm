@@ -1,0 +1,23 @@
+[
+  {
+    "frag_a": {
+      "id": "f001",
+      "theme": "hope",
+      "drift": 3,
+      "composted": false
+    },
+    "frag_b": {
+      "id": "f002",
+      "theme": "despair",
+      "drift": 1,
+      "resurrected": true
+    },
+    "contradiction": true,
+    "result": {
+      "status": "reinterpreted",
+      "notes": "Reframed f001 with f002",
+      "timestamp": "2025-08-22T00:37:35.766173+00:00"
+    },
+    "timestamp": "2025-08-22T00:37:35.766189+00:00"
+  }
+]

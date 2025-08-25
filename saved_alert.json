@@ -1,0 +1,16 @@
+{
+  "status": "success",
+  "metrics": {
+    "metric": "simulate_pair",
+    "duration_sec": 0.00021505355834960938,
+    "memory_delta_bytes": 0,
+    "agents": ["A335", "B335"],
+    "threshold": 0.011956923169412992
+  },
+  "result": {
+    "agentA": "A335",
+    "agentB": "B335",
+    "score": 0.3362058426873536,
+    "history_sample": [0.4925044537185159, 0.17990723165619127]
+  }
+}

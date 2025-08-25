@@ -1,0 +1,22 @@
+[
+  {
+    "id": "f001",
+    "theme": "hope",
+    "content": "She believed the silence was a beginning, not an end."
+  },
+  {
+    "id": "f002",
+    "theme": "despair",
+    "content": "The silence echoed everything she had lost."
+  },
+  {
+    "id": "f003",
+    "theme": "acceptance",
+    "content": "She folded the memory into her breath and moved forward."
+  },
+  {
+    "id": "f004",
+    "theme": "denial",
+    "content": "She refused to name what had already left her."
+  }
+]

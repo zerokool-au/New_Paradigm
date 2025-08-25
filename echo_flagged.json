@@ -1,0 +1,14 @@
+[
+  {
+    "id": "frag001",
+    "text": "Memory is not a static archive—it’s a living rehearsal.",
+    "theme": "memory",
+    "echo_flag": true
+  },
+  {
+    "id": "frag002",
+    "text": "Contradiction is compost, not failure.",
+    "theme": "contradiction",
+    "echo_flag": true
+  }
+]

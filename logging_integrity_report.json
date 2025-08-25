@@ -1,0 +1,32 @@
+[
+  {
+    "id": "frag_001",
+    "missing_fields": [
+      "bias_score",
+      "drift_score",
+      "contradiction_score",
+      "tags"
+    ],
+    "content": "The system resists contradiction, but silence persists."
+  },
+  {
+    "id": "frag_002",
+    "missing_fields": [
+      "bias_score",
+      "drift_score",
+      "contradiction_score",
+      "tags"
+    ],
+    "content": "Echo Logic detects semantic latency in dreamstate rehearsal."
+  },
+  {
+    "id": "frag_003",
+    "missing_fields": [
+      "bias_score",
+      "drift_score",
+      "contradiction_score",
+      "tags"
+    ],
+    "content": "Compost routing failed to metabolize recursive tension."
+  }
+]

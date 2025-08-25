@@ -1,0 +1,14 @@
+[
+  {
+    "timestamp": "2025-08-22T09:55:00+10:00",
+    "pair": ["f003", "f004"],
+    "status": "resurrected",
+    "source_stage": "compost_bin",
+    "notes": "Fragment revived from semantic compost.",
+    "resurrected_output": {
+      "id": "r002",
+      "content": "Memory is the soil where meaning regrows.",
+      "theme": "renewal"
+    }
+  }
+]
