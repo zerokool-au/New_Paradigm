@@ -1,0 +1,29 @@
+[
+  {
+    "id": "frag_001",
+    "text": "Contradiction is compost, not corruption.",
+    "status": "composted",
+    "drift_score": 0.65,
+    "age": 42,
+    "flagged": false,
+    "fatigue": 3
+  },
+  {
+    "id": "frag_002",
+    "text": "Semantic fatigue triggers ambient override.",
+    "status": "composted",
+    "drift_score": 0.72,
+    "age": 17,
+    "flagged": true,
+    "fatigue": 5
+  },
+  {
+    "id": "frag_003",
+    "text": "Wally Mamma observed during contradiction sweep.",
+    "status": "contradiction",
+    "drift_score": 0.88,
+    "age": 5,
+    "flagged": true,
+    "fatigue": 1
+  }
+]

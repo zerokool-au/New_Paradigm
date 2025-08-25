@@ -1,48 +1,32 @@
-# rr_drift_audit.py
+class DriftLogger:
+    def __init__(self):
+        self.entries = []
 
-class DriftAudit:
-    def __init__(self, lineage):
-        self.lineage = lineage
+    def log(self, fragment_id, tension_type):
+        self.entries.append((fragment_id, tension_type))
 
-    def audit_unresolved(self):
-        unresolved = self.lineage.get_unresolved()
-        report = []
+class DriftAuditHook:
+    def __init__(self, logger, trigger):
+        self.logger = logger
+        self.trigger = trigger
 
-        for fid, data in unresolved.items():
-            tension_score = self._tension_score(data["origin_vectors"])
-            bias_flag = self._detect_echo_bias(data["text"])
-            report.append({
-                "fragment_id": fid,
-                "text": data["text"],
-                "cluster": data["cluster"],
-                "origin_vectors": data["origin_vectors"],
-                "tension_score": tension_score,
-                "echo_bias": bias_flag
+    def audit(self, fragment):
+        if self.trigger.check(fragment):
+            self.logger.log(fragment.id, "governance_tension")
+
+def integrate_drift_audit(engine, hook):
+    original_synthesize = engine.synthesize_from_overload
+
+    def wrapped(threshold=5):
+        results = original_synthesize(threshold)
+        for i, text in enumerate(results):
+            fragment = Fragment({
+                "id": f"synth_{i+1}",
+                "text": text,
+                "flags": [],
+                "metadata": {}
             })
+            hook.audit(fragment)
+        return results
 
-        return report
-
-    def _tension_score(self, vectors):
-        return round(min(len(vectors) / 3.0, 1.0), 2)
-
-    def _detect_echo_bias(self, text):
-        bias_terms = ["self", "identity", "agency", "truth", "loop"]
-        hits = sum(1 for term in bias_terms if term in text.lower())
-        return hits >= 2
-
-if __name__ == "__main__":
-    from rr_echo_lineage import EchoLineage
-
-    lineage = EchoLineage()
-    fid = lineage.register_fragment(
-        fragment_text="Fragment D loops back on agency and identity without contradiction rehearsal.",
-        source="synthesis",
-        cluster="Identity Drift",
-        origin_vectors=["identity_drift", "agency_conflict"]
-    )
-
-    audit = DriftAudit(lineage)
-    report = audit.audit_unresolved()
-    print("\n🧠 Drift Audit Report:")
-    for entry in report:
-        print(entry)
+    engine.synthesize_from_overload = wrapped

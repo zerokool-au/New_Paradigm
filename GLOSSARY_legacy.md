@@ -4,3 +4,9 @@
 ## 🧩 Living Glossary – Mischief Layer
 🔹 **frag_001** — Recursive governance rehearsal reveals paradox.
     _Tags: epistemic_paradox, recursive_koan, governance_prompt_
+
+
+### 🕰️ Archived Glossary — 2025-08-25 17:36:03
+## 🧩 Living Glossary – Mischief Layer
+🔹 **frag_001** — Recursive governance rehearsal reveals paradox.
+    _Tags: epistemic_paradox, recursive_koan, governance_prompt_

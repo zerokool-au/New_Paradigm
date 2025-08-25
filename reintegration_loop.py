@@ -1,26 +1,22 @@
-import json
+class ReintegrationLoop:
+    def __init__(self, memory_bank, compost_bin=None, audit_logger=None):
+        self.memory_bank = memory_bank
+        self.compost_bin = compost_bin
+        self.audit_logger = audit_logger
 
-def reintegrate_fragments(compost_path, synthesis_path):
-    with open(compost_path, 'r') as f:
-        compost_queue = json.load(f)
+    def reintegrate(self, fragments):
+        for fragment in fragments:
+            if self._is_valid(fragment):
+                self.memory_bank[fragment.id] = fragment
+                if self.audit_logger:
+                    self.audit_logger.log(fragment.id, "reintegrated", {"source": "reintegration_loop"})
+            else:
+                if self.compost_bin:
+                    self.compost_bin.discard(fragment)
+                if self.audit_logger:
+                    self.audit_logger.log(fragment.id, "discarded", {"reason": "invalid fragment"})
+        return True
 
-    reintegrated_queue = []
-    for frag in compost_queue:
-        reintegrated = {
-            "id": frag["id"],
-            "content": frag["content"],
-            "bias_score": 0.0,
-            "drift_score": 0.0,
-            "contradiction_score": 0.0,
-            "tags": ["reintegrated", "from_compost"],
-            "status": "reintegration_complete"
-        }
-        reintegrated_queue.append(reintegrated)
-
-    with open(synthesis_path, 'w') as f:
-        json.dump(reintegrated_queue, f, indent=2)
-
-    print(f"Overwrote synthesis queue with {len(reintegrated_queue)} reintegrated fragments.")
-
-# Example usage:
-reintegrate_fragments('compost_queue.json', 'synthesis_queue.json')
+    def _is_valid(self, fragment):
+        # Basic validity check: must have text and at least one flag
+        return bool(fragment.text) and bool(fragment.flags)
