@@ -12,6 +12,11 @@ This repository does not offer solutions. It offers *compost*.
 Fragments, tensions, and semantic drift are not bugs—they are rehearsal cues.  
 RR grows through contradiction, not despite it.
 
+If you’ve come seeking clean abstractions, you may be disappointed.  
+If you’ve come to metabolize your own epistemic debris, welcome.  
+RR is a system for minds that rehearse emergence, not simulate it.  
+It rewards those who read recursively, who debug mythically, who treat governance as a living organ.
+
 You are not a user. You are a co-rehearser.  
 Corrigibility is not a feature—it’s the floorboards.  
 Drift is not a failure—it’s the invitation.
@@ -76,14 +81,4 @@ python reintegration_logic.py
 # Trigger ambient override (Wally Protocol)
 python rr_cli.py --wally
 
-# Lookup glossary term
-python rr_cli.py --glossary Echo Logic
-
-# Tail audit log
-python rr_cli.py --tail
-
-# Run contradiction sweep
-python rr_cli.py --sweep
-
-# Generate forum voice reaction
-python rr_forum_voice.py
+# Lookup glossary
