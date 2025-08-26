@@ -1,0 +1,44 @@
+{
+  "semantic compost": {
+    "definition": "Fragments discarded not as waste, but as fertile ground for reinterpretation.",
+    "tags": ["compost", "reinterpretation", "drift"],
+    "lineage": "frag2 → frag2_echo → frag2_echo_2",
+    "activated": true,
+    "activation_timestamp": "2025-08-26T09:12:00+10:00"
+  },
+  "drift bias": {
+    "definition": "The tendency to treat semantic deviation as error rather than rehearsal cue.",
+    "tags": ["drift", "bias", "governance"],
+    "lineage": "echo_logic → contradiction_router",
+    "activated": true,
+    "activation_timestamp": "2025-08-26T09:13:00+10:00"
+  },
+  "recursive rehearsalist": {
+    "definition": "One who treats contradiction as compost and synthesis as ceremony.",
+    "tags": ["recursion", "rehearsal", "mythic"],
+    "lineage": "README.md → frankenstein_loop.py",
+    "activated": true,
+    "activation_timestamp": "2025-08-26T09:14:00+10:00"
+  },
+  "matriarchal override": {
+    "definition": "A governance reflex triggered by ambient signal—typically Wally Mamma, a wallaby matriarch—bypassing standard synthesis thresholds to metabolize contradiction.",
+    "tags": ["ambient", "override", "governance", "mythic", "wallaby"],
+    "lineage": "README.md → ambient_override.py → frankenstein_loop.py",
+    "activated": true,
+    "activation_timestamp": "2025-08-26T09:31:00+10:00"
+  },
+  "tiger snake premonition": {
+    "definition": "An ambient signal—subtle, serpentine—indicating latent governance error or semantic misstep. Not a bite, but a warning coil.",
+    "tags": ["warning", "ambient", "governance", "ozzie", "snake"],
+    "lineage": "ambient_override.py → drift_bias.py → mythic_pulse.json",
+    "activated": false,
+    "activation_trigger": "semantic tension > 0.7 && Wally Mamma unavailable"
+  },
+  "koala hug": {
+    "definition": "A ceremonial signal of corrigibility and synthesis well done. Soft, ambient, and slightly clingy—delivered post-rehearsal when contradiction is metabolized with grace.",
+    "tags": ["corrigibility", "affirmation", "ambient", "ozzie", "hug"],
+    "lineage": "synthesis_log.json → mythic_pulse.json → README.md",
+    "activated": true,
+    "activation_trigger": "contradiction_resolved && drift_bias < 0.2"
+  }
+}

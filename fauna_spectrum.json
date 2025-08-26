@@ -1,0 +1,23 @@
+{
+  "wallaby": {
+    "role": "matriarchal override",
+    "trigger": "ambient signal + contradiction threshold",
+    "tone": "quiet governance reroute"
+  },
+  "tiger snake": {
+    "role": "premonition",
+    "trigger": "semantic tension > 0.7",
+    "tone": "coiled warning"
+  },
+  "koala": {
+    "role": "affirmation",
+    "trigger": "contradiction_resolved && drift_bias < 0.2",
+    "tone": "clingy corrigibility"
+  },
+  "kookaburra": {
+    "role": "commentary",
+    "trigger": "semantic slip or recursive pun",
+    "tone": "ambient laughter"
+  }
+}
+

@@ -1,0 +1,22 @@
+{
+  "wallaby": {
+    "role": "matriarchal_override",
+    "trigger": "ambient_signal && contradiction_threshold_exceeded",
+    "tone": "quiet_governance_reroute"
+  },
+  "tiger_snake": {
+    "role": "premonition",
+    "trigger": "semantic_tension > 0.7",
+    "tone": "coiled_warning"
+  },
+  "koala": {
+    "role": "affirmation",
+    "trigger": "contradiction_resolved && drift_bias < 0.2",
+    "tone": "clingy_corrigibility"
+  },
+  "kookaburra": {
+    "role": "commentary",
+    "trigger": "semantic_slip || recursive_pun_detected",
+    "tone": "ambient_laughter"
+  }
+}

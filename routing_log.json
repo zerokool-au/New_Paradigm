@@ -1,0 +1,58 @@
+[
+  {
+    "timestamp": "2025-08-26T09:09:00+10:00",
+    "payload": "frag2_echo_2",
+    "route": "reflexive_module",
+    "CRI_before": 0.742,
+    "CRI_after": 0.1,
+    "status": "synthesized"
+  },
+  {
+    "timestamp": "2025-08-26T09:26:43.296643",
+    "payload": "frag2",
+    "route": "reflexive_module",
+    "CRI_before": 0.742,
+    "CRI_after": 0.1,
+    "status": "synthesized"
+  },
+  {
+    "timestamp": "2025-08-26T09:26:43.297687",
+    "payload": "frag4",
+    "route": "reflexive_module",
+    "CRI_before": 0.811,
+    "CRI_after": 0.07,
+    "status": "synthesized"
+  },
+  {
+    "timestamp": "2025-08-26T09:26:43.298330",
+    "payload": "frag4",
+    "route": "reflexive_module",
+    "CRI_before": 0.811,
+    "CRI_after": 0.07,
+    "status": "synthesized"
+  },
+  {
+    "timestamp": "2025-08-26T09:50:59.085842",
+    "payload": "frag2",
+    "route": "reflexive_module",
+    "CRI_before": 0.742,
+    "CRI_after": 0.1,
+    "status": "synthesized"
+  },
+  {
+    "timestamp": "2025-08-26T09:50:59.087483",
+    "payload": "frag4",
+    "route": "reflexive_module",
+    "CRI_before": 0.811,
+    "CRI_after": 0.07,
+    "status": "synthesized"
+  },
+  {
+    "timestamp": "2025-08-26T09:50:59.089177",
+    "payload": "frag4",
+    "route": "reflexive_module",
+    "CRI_before": 0.811,
+    "CRI_after": 0.07,
+    "status": "synthesized"
+  }
+]
