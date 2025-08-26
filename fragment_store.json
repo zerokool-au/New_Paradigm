@@ -20,10 +20,26 @@
   {
     "id": "frag_003",
     "text": "Wally Mamma observed during contradiction sweep.",
-    "status": "contradiction",
+    "status": "glossary_finalized",
     "drift_score": 0.88,
     "age": 5,
     "flagged": true,
-    "fatigue": 1
+    "fatigue": 1,
+    "routing_timestamp": "2025-08-26T14:24:02.792104",
+    "tag": "mythic-seeded",
+    "rehearsal_timestamp": "2025-08-26T04:33:01.625114+00:00",
+    "finalized_timestamp": "2025-08-26T04:34:52.700079+00:00"
+  },
+  {
+    "id": "frag_004",
+    "text": "Contradiction is both signal and noise.",
+    "status": "composted",
+    "flagged": true,
+    "fatigue": 2,
+    "routing_timestamp": "2025-08-26T04:28:50.954265+00:00",
+    "tag": "closure-penalty",
+    "rehearsal_timestamp": "2025-08-26T04:33:01.627422+00:00",
+    "loop_count": 4,
+    "override_timestamp": "2025-08-26T04:43:44.600676+00:00"
   }
 ]

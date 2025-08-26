@@ -42,9 +42,7 @@ def sweep_fragments(fragment_store):
 
         # Check audit mismatch
         recent_log = frag["audit_trail"][-1] if frag["audit_trail"] else {}
-        if recent_log.get("source") not in [
-            "echo_logic", "rr_synthesis_engine", "dimulste", "rr_governance_reflex"
-        ]:
+        if recent_log.get("source") not in ["echo_logic", "rr_synthesis_engine", "dimulste", "rr_governance_reflex"]:
             anomalies["audit_mismatch"].append(fid)
 
         # Resurrection tagging
@@ -68,41 +66,3 @@ def sweep_fragments(fragment_store):
     )
 
     return anomalies
-
-# Example usage
-if __name__ == "__main__":
-    # Placeholder fragment store
-    fragment_store = [
-        {
-            "id": "frag_001",
-            "text": "vector agency_conflict",
-            "flags": ["echo_reinterpreted"],
-            "audit_trail": [{"source": "echo_logic", "action": "semantic_rehearsal"}]
-        },
-        {
-            "id": "frag_002",
-            "text": "drift detected",
-            "flags": ["synthesized"],
-            "audit_trail": [],
-            # Missing source_ids
-        },
-        {
-            "id": "frag_003",
-            "text": "paradox unresolved",
-            "flags": ["contradiction_detected"],
-            "audit_trail": [{"source": "rr_governance_reflex", "action": "epistemic_tension"}]
-        },
-        {
-            "id": "frag_004",
-            "text": "latent grief echo",
-            "flags": [],
-            "status": "dormant",
-            "drift_score": 0.2,
-            "audit_trail": []
-        }
-    ]
-
-    results = sweep_fragments(fragment_store)
-    print("Compost Sweep Results:")
-    for category, items in results.items():
-        print(f"{category}: {items}")

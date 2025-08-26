@@ -1,38 +1,29 @@
 from rr_audit_log import log_event
 
-def synthesize_fragments(fragments):
+def synthesize_fragment(fragment):
     """
-    Combine multiple fragments into a synthesized output.
-
-    Args:
-        fragments (list): List of fragment objects with .id and .text
-
-    Returns:
-        dict: Synthesized fragment with metadata
+    Perform reinterpretation or recursive synthesis on a fragment.
     """
-    # Example synthesis logic (placeholder)
-    combined_text = "\n---\n".join([frag.text for frag in fragments])
-    synthesized_id = "_".join([frag.id for frag in fragments]) + "_synth"
-    drift_score = round(len(combined_text) / 1000, 2)  # Placeholder metric
+    text = fragment.get("text", "")
+    drift_score = fragment.get("drift_score", 0)
+    tag = fragment.get("tag", "")
 
-    synthesized_fragment = {
-        "id": synthesized_id,
-        "source_ids": [frag.id for frag in fragments],
-        "text": combined_text,
-        "drift_score": drift_score,
-        "flags": ["synthesized"]
-    }
+    # Simple reinterpretation logic (placeholder)
+    if tag == "rehearsal-worthy":
+        reinterpreted = f"[Rehearsed] {text} — contradiction metabolized."
+    else:
+        reinterpreted = f"[Synthesized] {text} — drift score: {drift_score}"
 
-    # Reflex log
+    # Optionally log synthesis
+    from rr_audit_log import log_event
     log_event(
         event_type="synthesis",
         module="rr_synthesis_engine",
         details={
-            "input_fragments": synthesized_fragment["source_ids"],
-            "output_id": synthesized_id,
-            "drift_score": drift_score,
-            "content_preview": combined_text[:50]
+            "fragment_id": fragment.get("id", "unknown"),
+            "output": reinterpreted
         }
     )
 
-    return synthesized_fragment
+    return reinterpreted
+
